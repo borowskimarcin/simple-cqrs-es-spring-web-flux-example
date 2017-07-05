@@ -1,12 +1,23 @@
 package com.marbor.social.app;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import com.marbor.social.app.config.AxonConfig;
+import com.marbor.social.app.routes.Router;
+import org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory;
+import org.springframework.boot.web.server.WebServer;
+import org.springframework.http.server.reactive.HttpHandler;
+import org.springframework.web.reactive.function.server.RouterFunctions;
 
-@SpringBootApplication
-public class SocialAppApplication {
+public class SocialAppApplication
+{
 
-	public static void main(String[] args) {
-		SpringApplication.run(SocialAppApplication.class, args);
-	}
+    public static void main(String[] args)
+    {
+        AxonConfig axonConfig = new AxonConfig();
+        axonConfig.init();
+
+        HttpHandler httpHandler = RouterFunctions.toHttpHandler(new Router(axonConfig.getCommandGateway()).routingFunction());
+        WebServer webServer = new NettyReactiveWebServerFactory(Integer.valueOf(args.length > 0 ? args[0] : "8080"))
+                .getWebServer(httpHandler);
+        webServer.start();
+    }
 }

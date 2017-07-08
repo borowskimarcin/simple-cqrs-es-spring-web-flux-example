@@ -3,12 +3,14 @@ package com.marbor.social.app.routes;
 import com.marbor.social.app.commands.CreateTweetCommand;
 import com.marbor.social.app.domain.Tweet;
 import com.marbor.social.app.repositories.TweetRepository;
+import com.marbor.social.app.repositories.UserRepository;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.web.reactive.function.BodyExtractors;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+import static com.marbor.social.app.routes.RestMessages.USER_ID_NOT_EXISTS;
 import static com.marbor.social.app.routes.RestMessages.TWEET_MESSAGE_TOO_LONG;
 import static com.marbor.social.app.utils.Utils.toMono;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -28,20 +30,32 @@ public class TweetHandler
 
     Mono<ServerResponse> createTweet(ServerRequest request)
     {
-        Mono<ServerResponse> badRequest = ServerResponse.badRequest()
+        Mono<ServerResponse> badRequestMessageTooLong = ServerResponse.badRequest()
                 .body(fromObject(TWEET_MESSAGE_TOO_LONG.message()));
-        //here should be validation part
+        Mono<ServerResponse> badRequestAuthorDoesNotExists = ServerResponse.badRequest()
+                .body(fromObject(USER_ID_NOT_EXISTS.message()));
 
-        return request.body(BodyExtractors.toMono(Tweet.class))
-                .filter(this::validateSize)
-                .flatMap(tweet -> toMono(commandGateway.send(
-                        new CreateTweetCommand(tweet.getId(),
-                                tweet.getMessage(),
-                                request.pathVariable("id")
-                        )))
-                        .flatMap(result -> ServerResponse.ok()
-                                .contentType(APPLICATION_JSON).body(fromObject(tweet))))
-                .switchIfEmpty(badRequest);
+        String authorId = request.pathVariable("id");
+
+
+
+        return UserRepository.getRepository().findById(authorId)
+                .flatMap(user -> request.body(BodyExtractors.toMono(Tweet.class))
+                        .filter(this::validateSize)
+                        .flatMap(tweet -> toMono(commandGateway.send(
+                                new CreateTweetCommand(tweet.getId(),
+                                        tweet.getMessage(),
+                                        authorId
+                                )))
+                                .flatMap(result -> ServerResponse.ok()
+                                        .contentType(APPLICATION_JSON).body(fromObject(fillTweet(tweet, authorId)))))
+                        .switchIfEmpty(badRequestMessageTooLong))
+                .switchIfEmpty(badRequestAuthorDoesNotExists);
+    }
+
+    private Tweet fillTweet(Tweet tweet, String authorId)
+    {
+        return new Tweet(tweet.getId(),tweet.getMessage(), authorId, authorId);
     }
 
     private boolean validateSize(Tweet tweet)

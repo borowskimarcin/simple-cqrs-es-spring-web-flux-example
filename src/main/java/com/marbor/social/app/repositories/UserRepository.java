@@ -4,7 +4,7 @@ import com.marbor.social.app.domain.User;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,7 +15,7 @@ public class UserRepository implements Repository<User>
 {
     private static final UserRepository USER_REPOSITORY = new UserRepository();
 
-    private final HashMap<String, User> localRepo = new HashMap<>(128);
+    private final LinkedHashMap<String, User> localRepo = new LinkedHashMap<>(128);
 
     private UserRepository(){}
 

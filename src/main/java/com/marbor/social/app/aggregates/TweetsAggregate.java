@@ -23,7 +23,7 @@ public class TweetsAggregate
 
     @CommandHandler
     public TweetsAggregate(CreateTweetCommand command) {
-        apply(new TweetCreatedEvent(command.getId(), command.getText()));
+        apply(new TweetCreatedEvent(command.getId(), command.getText(), command.getAuthorId()));
     }
 
     @EventHandler

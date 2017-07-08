@@ -5,14 +5,15 @@ import org.axonframework.commandhandling.TargetAggregateIdentifier;
 
 public class CreateTweetCommand
 {
- 
     @TargetAggregateIdentifier
     private final String id;
     private final String text;
- 
-    public CreateTweetCommand(String id, String text) {
+    private final String authorId;
+
+    public CreateTweetCommand(String id, String message, String authorId) {
         this.id = id;
-        this.text = text;
+        this.text = message;
+        this.authorId = authorId;
     }
  
     public String getId() {
@@ -21,5 +22,10 @@ public class CreateTweetCommand
  
     public String getText() {
         return text;
+    }
+
+    public String getAuthorId()
+    {
+        return authorId;
     }
 }

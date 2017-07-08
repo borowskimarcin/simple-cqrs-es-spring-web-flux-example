@@ -3,9 +3,7 @@ package com.marbor.social.app;
 
 import com.marbor.social.app.aggregates.TweetsAggregate;
 import com.marbor.social.app.commands.CreateTweetCommand;
-import com.marbor.social.app.commands.MarkTweetAsCommand;
 import com.marbor.social.app.events.TweetCreatedEvent;
-import com.marbor.social.app.events.TweetReadEvent;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
 import org.junit.Before;
@@ -26,19 +24,11 @@ public class TweetsAggregateIntegrationTest
 
     @Test
     public void testCreateMessageCommand() throws Exception {
-        String eventText = "Hello, how is your day?";
+        String message = "Hello, how is your day?";
         String id = UUID.randomUUID().toString();
+        String authorId = UUID.randomUUID().toString();
         fixture.given()
-                .when(new CreateTweetCommand(id, eventText))
-                .expectEvents(new TweetCreatedEvent(id, eventText));
-    }
-
-    @Test
-    public void testReadMessageCommand() throws Exception {
-        String id = UUID.randomUUID().toString();
-
-        fixture.given(new TweetCreatedEvent(id, "Hello :-)"))
-                .when(new MarkTweetAsCommand(id))
-                .expectEvents(new TweetReadEvent(id));
+                .when(new CreateTweetCommand(id, message, authorId))
+                .expectEvents(new TweetCreatedEvent(id, message, authorId));
     }
 }

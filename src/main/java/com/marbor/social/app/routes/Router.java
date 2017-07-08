@@ -15,10 +15,12 @@ import static org.springframework.web.reactive.function.server.RouterFunctions.r
 public class Router
 {
     private final UserHandler userHandler;
+    private final TweetHandler tweetHandler;
 
     public Router(CommandGateway commandGateway)
     {
         this.userHandler = new UserHandler(commandGateway);
+        this.tweetHandler = new TweetHandler(commandGateway);
     }
 
     public RouterFunction<ServerResponse> routingFunction()
@@ -27,7 +29,8 @@ public class Router
                 .andRoute(GET(Routes.GET_USERS.pattern()), userHandler::getUsers)
                 .andRoute(GET(Routes.GET_USER.pattern()), userHandler::getUser)
                 .andRoute(PATCH(Routes.SUBSCRIBE.pattern()), userHandler::subscribe)
-                .andRoute(GET(Routes.GET_SUBSCRIPTIONS.pattern()), userHandler::getSubscriptions);
+                .andRoute(GET(Routes.GET_SUBSCRIPTIONS.pattern()), userHandler::getSubscriptions)
+                .andRoute(POST(Routes.CREATE_TWEET.pattern()), tweetHandler::createTweet);
     }
 }
 

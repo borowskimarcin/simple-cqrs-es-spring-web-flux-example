@@ -27,7 +27,6 @@ class UserHandler
         this.commandGateway = commandGateway;
     }
 
-
     Mono<ServerResponse> createUser(ServerRequest request)
     {
         Mono<ServerResponse> badRequest = ServerResponse.badRequest()

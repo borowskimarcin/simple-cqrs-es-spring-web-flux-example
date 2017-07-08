@@ -4,7 +4,6 @@ import com.marbor.social.app.routes.Routes;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
@@ -15,17 +14,17 @@ import static org.hamcrest.CoreMatchers.is;
 /**
  * Created by marcin on 08.07.17.
  */
-public class UserFollowersE2ETest extends E2eTest
+public class SubscriptionsE2ETest extends E2eTest
 {
     @Test
-    public void addFollowersToUser()
+    public void subscribeToUser()
     {
         String userId = JsonPath
                 .from(createUserWithName("user6")
                         .asString())
                 .get("id");
 
-        String followerId = JsonPath
+        String followedId = JsonPath
                 .from(createUserWithName("user7")
                         .asString())
                 .get("id");
@@ -33,9 +32,9 @@ public class UserFollowersE2ETest extends E2eTest
         given()
                 .contentType(ContentType.JSON)
                 .pathParam("id", userId)
-                .pathParam("followerId", followerId)
+                .pathParam("followedId", followedId)
                 .when()
-                .patch(Routes.ADD_FOLLOWER.pattern())
+                .patch(Routes.SUBSCRIBE.pattern())
                 .then()
                 .statusCode(200);
 
@@ -45,19 +44,28 @@ public class UserFollowersE2ETest extends E2eTest
                 .contentType(ContentType.JSON)
                 .statusCode(200)
                 .body("name", equalTo("user6"))
-                .body("followers", CoreMatchers.is(singletonList(followerId)))
+                .body("followedIds", is(singletonList(followedId)))
                 .body("id", is(userId));
 
+        getUser(followedId)
+                .then()
+                .contentType(ContentType.JSON)
+                .statusCode(200)
+                .body("name", equalTo("user7"))
+                .body("followersIds", is(singletonList(userId)))
+                .body("id", is(followedId));
+
     }
+
     @Test
-    public void addFollowersToUserAndGetThem()
+    public void subscribeAndGetFollowedIds()
     {
         String userId = JsonPath
                 .from(createUserWithName("user3")
                         .asString())
                 .get("id");
 
-        String followerId = JsonPath
+        String followedId = JsonPath
                 .from(createUserWithName("user4")
                         .asString())
                 .get("id");
@@ -65,25 +73,25 @@ public class UserFollowersE2ETest extends E2eTest
         given()
                 .contentType(ContentType.JSON)
                 .pathParam("id", userId)
-                .pathParam("followerId", followerId)
+                .pathParam("followedId", followedId)
                 .when()
-                .patch("/users/{id}/followers/{followerId}")
+                .patch(Routes.SUBSCRIBE.pattern())
                 .then()
                 .statusCode(200);
 
         // when & then
         //TODO change this
-        String packedFollowerId = "[\"" + followerId + "\"]";
+        String packedFollowedId = "[\"" + followedId + "\"]";
 
         given()
                 .contentType(ContentType.JSON)
                 .pathParam("id", userId)
             .when()
-                .get(Routes.GET_FOLLOWERS.pattern())
+                .get(Routes.GET_SUBSCRIPTIONS.pattern())
             .then()
                 .contentType(ContentType.JSON)
                 .statusCode(200)
-                .body(CoreMatchers.is(packedFollowerId));
+                .body(is(packedFollowedId));
 
     }
 

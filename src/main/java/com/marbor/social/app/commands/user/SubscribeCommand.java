@@ -3,23 +3,23 @@ package com.marbor.social.app.commands.user;
 
 import org.axonframework.commandhandling.TargetAggregateIdentifier;
 
-public class AddFollowerCommand
+public class SubscribeCommand
 {
 
     @TargetAggregateIdentifier
     private final String id;
-    private final String followerId;
+    private final String followedId;
 
-    public AddFollowerCommand(String id, String followerId) {
+    public SubscribeCommand(String id, String followedId) {
         this.id = id;
-        this.followerId = followerId;
+        this.followedId = followedId;
     }
  
     public String getId() {
         return id;
     }
  
-    public String getFollowerId() {
-        return followerId;
+    public String getFollowedId() {
+        return followedId;
     }
 }

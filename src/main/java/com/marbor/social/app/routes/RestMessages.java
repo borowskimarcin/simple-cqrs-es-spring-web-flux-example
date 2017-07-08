@@ -5,7 +5,10 @@ package com.marbor.social.app.routes;
  */
 public enum RestMessages
 {
-    USER_ALREADY_EXISTS("User already exists");
+    USER_ALREADY_EXISTS("User already exists"),
+    USER_NOT_FOUND("User not found"),
+    USERS_NOT_FOUND("Users do not exists"),
+    SUBSCRIPTION_NOT_FOUND("Subscription not found");
 
     private final String message;
 

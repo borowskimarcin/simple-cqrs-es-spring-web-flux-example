@@ -1,9 +1,9 @@
 package com.marbor.social.app.aggregates;
 
 
-import com.marbor.social.app.commands.user.AddFollowerCommand;
+import com.marbor.social.app.commands.user.SubscribeCommand;
 import com.marbor.social.app.commands.user.CreateUserCommand;
-import com.marbor.social.app.events.user.FollowerAddedEvent;
+import com.marbor.social.app.events.user.SubscribeEvent;
 import com.marbor.social.app.events.user.UserCreatedEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
@@ -26,8 +26,8 @@ public class UsersAggregate
     }
 
     @CommandHandler
-    public void addFollower(AddFollowerCommand command) {
-        apply(new FollowerAddedEvent(command.getId(), command.getFollowerId()));
+    public void addFollower(SubscribeCommand command) {
+        apply(new SubscribeEvent(command.getId(), command.getFollowedId()));
     }
 
     @EventHandler

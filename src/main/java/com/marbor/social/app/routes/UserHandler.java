@@ -1,6 +1,6 @@
 package com.marbor.social.app.routes;
 
-import com.marbor.social.app.commands.user.AddFollowerCommand;
+import com.marbor.social.app.commands.user.SubscribeCommand;
 import com.marbor.social.app.commands.user.CreateUserCommand;
 import com.marbor.social.app.domain.User;
 import com.marbor.social.app.repositories.UserRepository;
@@ -12,6 +12,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+import static com.marbor.social.app.routes.RestMessages.SUBSCRIPTION_NOT_FOUND;
+import static com.marbor.social.app.routes.RestMessages.USERS_NOT_FOUND;
 import static com.marbor.social.app.routes.RestMessages.USER_ALREADY_EXISTS;
 import static com.marbor.social.app.utils.Utils.toMono;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -44,8 +46,7 @@ class UserHandler
                             if (userExists)
                             {
                                 return badRequest;
-                            }
-                            else
+                            } else
                             {
                                 return toMono(commandGateway.send(new CreateUserCommand(u.getId(), u.getName())))
                                         .flatMap(result -> ServerResponse.ok()
@@ -62,13 +63,14 @@ class UserHandler
 
         Mono<ServerResponse> notFound = ServerResponse
                 .notFound()
-                .header("Message", "User not found")
+                .header("Message", RestMessages.USER_NOT_FOUND.message())
                 .build();
 
-        return user.flatMap(u -> ServerResponse.ok()
-                .contentType(APPLICATION_JSON)
-                .body(fromObject(u))
-                .switchIfEmpty(notFound));
+        return user.flatMap(u ->
+                        ServerResponse.ok()
+                                .contentType(APPLICATION_JSON)
+                                .body(fromObject(u)))
+                .switchIfEmpty(notFound);
     }
 
     Mono<ServerResponse> getUsers(ServerRequest request)
@@ -76,39 +78,43 @@ class UserHandler
         Mono<List<User>> users = UserRepository.getRepository().findAll();
         Mono<ServerResponse> notFound = ServerResponse
                 .notFound()
-                .header("Message", "Users not found")
+                .header("Message", USERS_NOT_FOUND.message())
                 .build();
 
-        return users.flatMap(u -> ServerResponse.ok()
-                .contentType(APPLICATION_JSON)
-                .body(fromObject(u))
-                .switchIfEmpty(notFound));
+        return users
+                .flatMap(u ->
+
+                        ServerResponse.ok()
+                                .contentType(APPLICATION_JSON)
+                                .body(fromObject(u)))
+                .switchIfEmpty(notFound);
+
     }
 
-    Mono<ServerResponse> addFollower(ServerRequest request)
+    Mono<ServerResponse> subscribe(ServerRequest request)
     {
         String id = request.pathVariable("id");
-        String followerId = request.pathVariable("followerId");
+        String followedId = request.pathVariable("followedId");
 
         //TODO follower already exists scenario
-        return toMono(commandGateway.send(new AddFollowerCommand(id, followerId)))
+        return toMono(commandGateway.send(new SubscribeCommand(id, followedId)))
                 .flatMap((result) -> ServerResponse.ok()
                         .contentType(APPLICATION_JSON)
-                        .body(fromObject("Follower: " + followerId + " added to: " + id)));
+                        .body(fromObject("User: " + id + " subscribed: " + followedId)));
     }
 
-    Mono<ServerResponse> getFollowers(ServerRequest request)
+    Mono<ServerResponse> getSubscriptions(ServerRequest request)
     {
         Mono<User> user = UserRepository.getRepository().findById(request.pathVariable("id"));
         Mono<ServerResponse> notFound = ServerResponse
                 .notFound()
-                .header("Message", "Users not found")
+                .header("Message", SUBSCRIPTION_NOT_FOUND.message())
                 .build();
 
         return user.flatMap(u -> ServerResponse.ok()
-                .contentType(APPLICATION_JSON)
-                .body(fromObject(u.getFollowers()))
-                .switchIfEmpty(notFound));
+                    .contentType(APPLICATION_JSON)
+                    .body(fromObject(u.getFollowedIds())))
+                .switchIfEmpty(notFound);
     }
 
 

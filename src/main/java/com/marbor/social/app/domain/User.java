@@ -4,11 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * Created by marcin on 05.07.17.
@@ -16,7 +12,6 @@ import java.util.stream.Collectors;
 public class User implements DomainObject
 {
     private static final String NAME_CAN_NOT_BE_NULL = "Name can not be null";
-    private static final String FOLLOWERS_LIST_CAN_NOT_BE_NULL = "Followers list can not be null";
 
     @NotNull
     private final String id;
@@ -26,8 +21,8 @@ public class User implements DomainObject
     /**
      * List of follower's id
      */
-    private List<String> followers;
-
+    private final List<String> followersIds;
+    private final List<String> followedIds;
     @JsonCreator
     public User(@JsonProperty("name") String name)
     {
@@ -36,16 +31,9 @@ public class User implements DomainObject
 
     public User(String name, String id)
     {
-        this(name, id, Collections.emptyList());
-    }
-
-    public User(@NotNull String name, String id, @NotNull List<String> followers)
-    {
         Objects.requireNonNull(name, NAME_CAN_NOT_BE_NULL);
-        Objects.requireNonNull(followers, FOLLOWERS_LIST_CAN_NOT_BE_NULL);
-        this.followers = followers.stream()
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        this.followersIds = new ArrayList<>();
+        this.followedIds = new ArrayList<>();
         this.name = name;
         this.id = id;
     }
@@ -64,8 +52,14 @@ public class User implements DomainObject
     }
 
     @NotNull
-    public List<String> getFollowers()
+    public List<String> getFollowersIds()
     {
-        return followers;
+        return followersIds;
+    }
+
+    @NotNull
+    public List<String> getFollowedIds()
+    {
+        return followedIds;
     }
 }

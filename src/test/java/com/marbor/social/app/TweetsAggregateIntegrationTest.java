@@ -25,7 +25,7 @@ public class TweetsAggregateIntegrationTest
     }
 
     @Test
-    public void giveAggregateRoot_whenCreateMessageCommand_thenShouldProduceMessageCreatedEvent() throws Exception {
+    public void testCreateMessageCommand() throws Exception {
         String eventText = "Hello, how is your day?";
         String id = UUID.randomUUID().toString();
         fixture.given()
@@ -34,7 +34,7 @@ public class TweetsAggregateIntegrationTest
     }
 
     @Test
-    public void givenMessageCreatedEvent_whenReadMessageCommand_thenShouldProduceMessageReadEvent() throws Exception {
+    public void testReadMessageCommand() throws Exception {
         String id = UUID.randomUUID().toString();
 
         fixture.given(new TweetCreatedEvent(id, "Hello :-)"))

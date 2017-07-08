@@ -8,8 +8,9 @@ public enum Routes
     CREATE_USER("/users"),
     GET_USERS("/users"),
     GET_USER("/users/{id}"),
-    ADD_FOLLOWER("/users/{id}/followers/{followerId}"),
-    GET_FOLLOWERS("/users/{id}/followers");
+    SUBSCRIBE("/users/{id}/subscriptions/{followedId}"),
+    GET_SUBSCRIPTIONS("/users/{id}/subscriptions");
+
 
     private final String pattern;
 

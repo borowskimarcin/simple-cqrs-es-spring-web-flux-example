@@ -2,9 +2,9 @@ package com.marbor.social.app;
 
 
 import com.marbor.social.app.aggregates.UsersAggregate;
-import com.marbor.social.app.commands.user.AddFollowerCommand;
+import com.marbor.social.app.commands.user.SubscribeCommand;
 import com.marbor.social.app.commands.user.CreateUserCommand;
-import com.marbor.social.app.events.user.FollowerAddedEvent;
+import com.marbor.social.app.events.user.SubscribeEvent;
 import com.marbor.social.app.events.user.UserCreatedEvent;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
@@ -25,7 +25,7 @@ public class UsersAggregateIntegrationTest
     }
 
     @Test
-    public void giveAggregateRoot_whenCreateUserCommand_thenShouldProduceUserCreatedEvent() throws Exception {
+    public void testCreateUserCommand() throws Exception {
         String name = "user";
         String id = UUID.randomUUID().toString();
         fixture.given()
@@ -33,12 +33,12 @@ public class UsersAggregateIntegrationTest
                 .expectEvents(new UserCreatedEvent(id, name));
     }
     @Test
-    public void giveAggregateRoot_whenAddFollowerCommand_thenShouldProduceFollowerAddedEvent() throws Exception {
+    public void testAddFollowerCommand() throws Exception {
         String id = UUID.randomUUID().toString();
-        String followerId = UUID.randomUUID().toString();
+        String followedId = UUID.randomUUID().toString();
         String name = "name";
         fixture.given(new UserCreatedEvent(id, name))
-                .when(new AddFollowerCommand(id, followerId))
-                .expectEvents(new FollowerAddedEvent(id, followerId));
+                .when(new SubscribeCommand(id, followedId))
+                .expectEvents(new SubscribeEvent(id, followedId));
     }
 }

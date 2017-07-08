@@ -15,7 +15,7 @@ import static org.hamcrest.CoreMatchers.*;
 public class UserApiBasicScenarioE2ETest extends E2eTest
 {
     @Test
-    public void sendPost_createUser_okResponse()
+    public void createUser()
     {
         String postBody = "{\"name\": \"user\"}";
 
@@ -28,12 +28,11 @@ public class UserApiBasicScenarioE2ETest extends E2eTest
                 .contentType(ContentType.JSON)
                 .statusCode(200)
                 .body("name", equalTo("user"))
-                .body("followers", notNullValue())
                 .body("id", notNullValue());
     }
 
     @Test
-    public void createUser_getUser()
+    public void createUserGetUser()
     {
         String postBody = "{\"name\": \"user2\"}";
 
@@ -55,12 +54,11 @@ public class UserApiBasicScenarioE2ETest extends E2eTest
                 .contentType(ContentType.JSON)
                 .statusCode(200)
                 .body("name", equalTo("user2"))
-                .body("followers", notNullValue())
                 .body("id", is(retrievedId));
     }
 
     @Test
-    public void createTheSameUserTwoTimes_badRequest()
+    public void createTheSameUserTwoTimes()
     {
         String postBody = "{\"name\": \"user10\"}";
 
@@ -73,7 +71,6 @@ public class UserApiBasicScenarioE2ETest extends E2eTest
                 .contentType(ContentType.JSON)
                 .statusCode(200)
                 .body("name", equalTo("user10"))
-                .body("followers", notNullValue())
                 .body("id", notNullValue());
 
         given()

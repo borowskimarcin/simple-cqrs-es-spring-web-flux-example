@@ -33,11 +33,17 @@ public class UserRepository implements Repository<User>
         localRepo.remove(entity.getId());
     }
 
+    //TODO should be flux
     @Override
     public Mono<List<User>> findAll()
     {
-        return Mono.justOrEmpty(localRepo.values().stream()
-                .collect(Collectors.toList()));
+        List<User> users = localRepo.values().stream().collect(Collectors.toList());
+        if (users.isEmpty())
+        {
+            return Mono.empty();
+        }
+
+        return Mono.just(users);
     }
 
     @Override

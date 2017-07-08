@@ -26,8 +26,8 @@ public class Router
         return route(POST(Routes.CREATE_USER.pattern()), userHandler::createUser)
                 .andRoute(GET(Routes.GET_USERS.pattern()), userHandler::getUsers)
                 .andRoute(GET(Routes.GET_USER.pattern()), userHandler::getUser)
-                .andRoute(PATCH(Routes.ADD_FOLLOWER.pattern()), userHandler::addFollower)
-                .andRoute(GET(Routes.GET_FOLLOWERS.pattern()), userHandler::getFollowers);
+                .andRoute(PATCH(Routes.SUBSCRIBE.pattern()), userHandler::subscribe)
+                .andRoute(GET(Routes.GET_SUBSCRIPTIONS.pattern()), userHandler::getSubscriptions);
     }
 }
 

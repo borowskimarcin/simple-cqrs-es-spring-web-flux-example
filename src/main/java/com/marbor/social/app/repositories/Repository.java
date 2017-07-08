@@ -1,9 +1,8 @@
 package com.marbor.social.app.repositories;
 
 import com.marbor.social.app.domain.DomainObject;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 /**
  * Created by marcin on 08.07.17.
@@ -27,7 +26,7 @@ public interface Repository<T extends DomainObject>
      *
      * @return returns all stored objects
      */
-    Mono<List<T>> findAll();
+    Flux<T> findAll();
 
     /**
      *

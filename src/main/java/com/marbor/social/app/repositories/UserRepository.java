@@ -1,6 +1,7 @@
 package com.marbor.social.app.repositories;
 
 import com.marbor.social.app.domain.User;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
@@ -33,17 +34,16 @@ public class UserRepository implements Repository<User>
         localRepo.remove(entity.getId());
     }
 
-    //TODO should be flux
     @Override
-    public Mono<List<User>> findAll()
+    public Flux<User> findAll()
     {
         List<User> users = localRepo.values().stream().collect(Collectors.toList());
         if (users.isEmpty())
         {
-            return Mono.empty();
+            return Flux.empty();
         }
 
-        return Mono.just(users);
+        return Flux.fromStream(users.stream());
     }
 
     @Override

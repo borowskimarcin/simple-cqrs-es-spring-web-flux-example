@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Created by marcin on 05.07.17.
@@ -18,9 +21,6 @@ public class User implements DomainObject
     @NotNull
     private final String name;
     @NotNull
-    /**
-     * List of follower's id
-     */
     private final List<String> followersIds;
     private final List<String> followedIds;
     @JsonCreator

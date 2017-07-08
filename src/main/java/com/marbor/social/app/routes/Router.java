@@ -30,7 +30,8 @@ public class Router
                 .andRoute(GET(Routes.GET_USER.pattern()), userHandler::getUser)
                 .andRoute(PATCH(Routes.SUBSCRIBE.pattern()), userHandler::subscribe)
                 .andRoute(GET(Routes.GET_SUBSCRIPTIONS.pattern()), userHandler::getSubscriptions)
-                .andRoute(POST(Routes.CREATE_TWEET.pattern()), tweetHandler::createTweet);
+                .andRoute(POST(Routes.CREATE_TWEET.pattern()), tweetHandler::createTweet)
+                .andRoute(GET(Routes.GET_TWEETS.pattern()),tweetHandler::getTweets);
     }
 }
 

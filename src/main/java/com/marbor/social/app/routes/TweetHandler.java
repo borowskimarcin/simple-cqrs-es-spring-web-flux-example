@@ -2,6 +2,7 @@ package com.marbor.social.app.routes;
 
 import com.marbor.social.app.commands.CreateTweetCommand;
 import com.marbor.social.app.domain.Tweet;
+import com.marbor.social.app.repositories.TweetRepository;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.web.reactive.function.BodyExtractors;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -36,7 +37,7 @@ public class TweetHandler
                 .flatMap(tweet -> toMono(commandGateway.send(
                         new CreateTweetCommand(tweet.getId(),
                                 tweet.getMessage(),
-                                tweet.getAuthorId()
+                                request.pathVariable("id")
                         )))
                         .flatMap(result -> ServerResponse.ok()
                                 .contentType(APPLICATION_JSON).body(fromObject(tweet))))
@@ -46,5 +47,26 @@ public class TweetHandler
     private boolean validateSize(Tweet tweet)
     {
         return tweet.getMessage().length() <= 140;
+    }
+
+    Mono<ServerResponse> getTweets(ServerRequest serverRequest)
+    {
+        Mono<ServerResponse> notFound = ServerResponse
+                .notFound()
+                .header("Message", RestMessages.TWEETS_NOT_FOUND.message())
+                .build();
+
+        return TweetRepository.getRepository().findAll().collectList()
+                .flatMap(tweets ->
+                {
+                    if (tweets.isEmpty())
+                    {
+                        return notFound;
+                    }
+
+                    return ServerResponse.ok()
+                            .contentType(APPLICATION_JSON)
+                            .body(fromObject(tweets));
+                });
     }
 }

@@ -80,10 +80,10 @@ class UserHandler
         return UserRepository.getRepository()
                 .findAll()
                 .collectList()
-                .flatMap(u ->
+                .flatMap(users ->
                         ServerResponse.ok()
                                 .contentType(APPLICATION_JSON)
-                                .body(fromObject(u)))
+                                .body(fromObject(users)))
                 .switchIfEmpty(notFound);
 
     }

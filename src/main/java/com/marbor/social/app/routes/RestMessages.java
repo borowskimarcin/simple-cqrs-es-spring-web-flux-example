@@ -9,7 +9,8 @@ public enum RestMessages
     USER_NOT_FOUND("User not found"),
     USERS_NOT_FOUND("Users do not exists"),
     SUBSCRIPTION_NOT_FOUND("Subscription not found"),
-    TWEET_MESSAGE_TOO_LONG("Message can not have more than 140 chars");
+    TWEET_MESSAGE_TOO_LONG("Message can not have more than 140 chars"),
+    TWEETS_NOT_FOUND("Tweets not found");
 
     private final String message;
 

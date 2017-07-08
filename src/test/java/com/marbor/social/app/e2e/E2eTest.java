@@ -10,7 +10,7 @@ import java.net.ServerSocket;
 /**
  * Created by marcin on 08.07.17.
  */
-public class E2eTest
+abstract class E2eTest
 {
     @BeforeClass
     public static void setUp() throws IOException

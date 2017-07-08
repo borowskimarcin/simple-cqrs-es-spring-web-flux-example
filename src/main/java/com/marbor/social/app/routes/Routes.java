@@ -10,8 +10,8 @@ public enum Routes
     GET_USER("/users/{id}"),
     SUBSCRIBE("/users/{id}/subscriptions/{followedId}"),
     GET_SUBSCRIPTIONS("/users/{id}/subscriptions"),
-    CREATE_TWEET("/users/{id}/tweets");
-
+    CREATE_TWEET("/users/{id}/tweets"),
+    GET_TWEETS("/tweets");
 
     private final String pattern;
 

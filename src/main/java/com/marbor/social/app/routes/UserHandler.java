@@ -1,7 +1,7 @@
 package com.marbor.social.app.routes;
 
-import com.marbor.social.app.commands.user.CreateUserCommand;
-import com.marbor.social.app.commands.user.SubscribeCommand;
+import com.marbor.social.app.commands.CreateUserCommand;
+import com.marbor.social.app.commands.SubscribeCommand;
 import com.marbor.social.app.domain.User;
 import com.marbor.social.app.repositories.UserRepository;
 import org.axonframework.commandhandling.gateway.CommandGateway;

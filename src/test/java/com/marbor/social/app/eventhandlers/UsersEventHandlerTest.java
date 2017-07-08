@@ -1,7 +1,7 @@
 package com.marbor.social.app.eventhandlers;
 
 import com.marbor.social.app.domain.User;
-import com.marbor.social.app.events.user.SubscribeEvent;
+import com.marbor.social.app.events.SubscribeEvent;
 import com.marbor.social.app.repositories.UserRepository;
 import org.junit.Before;
 import org.junit.Test;

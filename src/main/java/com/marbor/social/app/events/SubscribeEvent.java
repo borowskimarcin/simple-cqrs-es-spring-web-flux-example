@@ -1,4 +1,4 @@
-package com.marbor.social.app.events.user;
+package com.marbor.social.app.events;
 
 public class SubscribeEvent
 {

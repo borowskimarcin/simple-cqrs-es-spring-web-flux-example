@@ -1,4 +1,4 @@
-package com.marbor.social.app.commands.user;
+package com.marbor.social.app.commands;
 
 
 import org.axonframework.commandhandling.TargetAggregateIdentifier;

@@ -1,10 +1,10 @@
 package com.marbor.social.app.aggregates;
 
 
-import com.marbor.social.app.commands.user.SubscribeCommand;
-import com.marbor.social.app.commands.user.CreateUserCommand;
-import com.marbor.social.app.events.user.SubscribeEvent;
-import com.marbor.social.app.events.user.UserCreatedEvent;
+import com.marbor.social.app.commands.SubscribeCommand;
+import com.marbor.social.app.commands.CreateUserCommand;
+import com.marbor.social.app.events.SubscribeEvent;
+import com.marbor.social.app.events.UserCreatedEvent;
 import org.axonframework.commandhandling.CommandHandler;
 import org.axonframework.commandhandling.model.AggregateIdentifier;
 import org.axonframework.eventhandling.EventHandler;

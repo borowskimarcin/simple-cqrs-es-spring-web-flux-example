@@ -2,10 +2,10 @@ package com.marbor.social.app;
 
 
 import com.marbor.social.app.aggregates.UsersAggregate;
-import com.marbor.social.app.commands.user.SubscribeCommand;
-import com.marbor.social.app.commands.user.CreateUserCommand;
-import com.marbor.social.app.events.user.SubscribeEvent;
-import com.marbor.social.app.events.user.UserCreatedEvent;
+import com.marbor.social.app.commands.SubscribeCommand;
+import com.marbor.social.app.commands.CreateUserCommand;
+import com.marbor.social.app.events.SubscribeEvent;
+import com.marbor.social.app.events.UserCreatedEvent;
 import org.axonframework.test.aggregate.AggregateTestFixture;
 import org.axonframework.test.aggregate.FixtureConfiguration;
 import org.junit.Before;

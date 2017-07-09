@@ -5,6 +5,7 @@ import com.marbor.social.app.events.SubscribeEvent;
 import com.marbor.social.app.events.UserCreatedEvent;
 import com.marbor.social.app.repositories.UserRepository;
 import org.axonframework.eventhandling.EventHandler;
+import reactor.core.publisher.Mono;
 
 
 public class UsersEventHandler
@@ -23,16 +24,16 @@ public class UsersEventHandler
         repository.findById(event.getUserId())
                 .flatMap(user -> repository
                         .findById(event.getFollowedId())
-                        .map(followedUser -> syncSubscription(user, followedUser)))
+                        .flatMap(followedUser -> syncSubscription(user, followedUser)))
                 .subscribe();
 
         System.out.println("Follower: " + event.getFollowedId() + " added to: " + event.getUserId());
     }
 
-    private boolean syncSubscription(User user, User followedUser)
+    private Mono syncSubscription(User user, User followedUser)
     {
         user.getFollowedIds().add(followedUser.getId());
         followedUser.getFollowersIds().add(user.getId());
-        return true;
+        return  Mono.empty();
     }
 }

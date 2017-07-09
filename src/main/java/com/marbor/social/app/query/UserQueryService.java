@@ -27,6 +27,6 @@ public class UserQueryService
     public Mono<List<String>> findSubscriptions(String userId)
     {
         return findUser(userId)
-                .map(User::getFollowersIds);
+                .map(User::getFollowedIds);
     }
 }

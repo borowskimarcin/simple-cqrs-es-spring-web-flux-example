@@ -12,7 +12,7 @@ import java.net.ServerSocket;
 /**
  * Created by marcin on 08.07.17.
  */
-public abstract class E2eTest
+public abstract class E2eIT
 {
     protected final Helper helper = new Helper();
 

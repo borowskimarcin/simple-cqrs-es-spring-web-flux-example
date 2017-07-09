@@ -13,7 +13,7 @@ import static org.hamcrest.CoreMatchers.is;
 /**
  * Created by marcin on 08.07.17.
  */
-public class SubscriptionsE2ETest extends E2eTest
+public class SubscriptionsE2EIT extends E2eIT
 {
     @Test
     public void subscribeToUser()

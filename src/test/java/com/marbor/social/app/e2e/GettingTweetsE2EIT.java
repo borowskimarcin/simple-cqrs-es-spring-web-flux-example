@@ -16,7 +16,7 @@ import static io.restassured.RestAssured.given;
 /**
  * Created by marcin on 09.07.17.
  */
-public class GettingTweetsE2ETest extends E2eTest
+public class GettingTweetsE2EIT extends E2eIT
 {
     @Test
     public void testGetWallTweets()

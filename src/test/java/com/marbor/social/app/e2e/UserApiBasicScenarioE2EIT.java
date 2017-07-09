@@ -12,7 +12,7 @@ import static org.hamcrest.CoreMatchers.*;
 /**
  * Created by marcin on 08.07.17.
  */
-public class UserApiBasicScenarioE2ETest extends E2eTest
+public class UserApiBasicScenarioE2EIT extends E2eIT
 {
     @Test
     public void createUser()

@@ -19,7 +19,7 @@ import static org.hamcrest.CoreMatchers.isA;
 /**
  * Created by marcin on 09.07.17.
  */
-public class AddingTweetsE2ETest extends E2eTest
+public class AddingTweetsE2EIT extends E2eIT
 {
     @Test
     public void create2UsersSubscribeMakeTweet()

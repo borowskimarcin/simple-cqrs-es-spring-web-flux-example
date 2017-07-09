@@ -9,10 +9,10 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses(
         {
-                UserApiBasicScenarioE2ETest.class,
-                SubscriptionsE2ETest.class,
-                AddingTweetsE2ETest.class,
-                GettingTweetsE2ETest.class
+                UserApiBasicScenarioE2EIT.class,
+                SubscriptionsE2EIT.class,
+                AddingTweetsE2EIT.class,
+                GettingTweetsE2EIT.class
 
         })
 public class E2ETestsSuite

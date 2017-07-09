@@ -10,6 +10,10 @@ import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static com.marbor.social.app.routes.RestMessages.USER_ID_NOT_EXISTS;
 import static com.marbor.social.app.routes.RestMessages.TWEET_MESSAGE_TOO_LONG;
 import static com.marbor.social.app.utils.Utils.toMono;
@@ -31,14 +35,13 @@ public class TweetHandler
     Mono<ServerResponse> createTweet(ServerRequest request)
     {
         Mono<ServerResponse> badRequestMessageTooLong = ServerResponse.badRequest()
-                .header(Header.ERROR.message(),TWEET_MESSAGE_TOO_LONG.message())
+                .header(Header.ERROR.message(), TWEET_MESSAGE_TOO_LONG.message())
                 .build();
         Mono<ServerResponse> badRequestAuthorDoesNotExists = ServerResponse.badRequest()
                 .header(Header.ERROR.message(), USER_ID_NOT_EXISTS.message())
                 .build();
 
         String authorId = request.pathVariable("id");
-
 
 
         return UserRepository.getRepository().findById(authorId)
@@ -57,7 +60,7 @@ public class TweetHandler
 
     private Tweet fillTweet(Tweet tweet, String authorId)
     {
-        return new Tweet(tweet.getId(),tweet.getMessage(), authorId, authorId);
+        return new Tweet(tweet.getId(), tweet.getMessage(), authorId, authorId);
     }
 
     private boolean validateSize(Tweet tweet)
@@ -84,5 +87,81 @@ public class TweetHandler
                             .contentType(APPLICATION_JSON)
                             .body(fromObject(tweets));
                 });
+    }
+
+    Mono<ServerResponse> getTweetsForWall(ServerRequest serverRequest)
+    {
+        String userId = serverRequest.pathVariable("id");
+
+        Mono<ServerResponse> notFound = ServerResponse
+                .notFound()
+                .header(Header.ERROR.message(), RestMessages.TWEETS_NOT_FOUND.message())
+                .build();
+
+        return TweetRepository.getRepository().findAll().collectList()
+                .flatMap(tweets ->
+                        {
+                            if (tweets.isEmpty())
+                            {
+                                return notFound;
+                            }
+
+                            return ServerResponse.ok()
+                                    .contentType(APPLICATION_JSON)
+                                    .body(fromObject(reverse(getWallTweets(userId, tweets))));
+                        }
+                );
+    }
+
+    private List<Tweet> reverse(List<Tweet> wallTweets)
+    {
+        Collections.reverse(wallTweets);
+        return wallTweets;
+    }
+
+    private List<Tweet> getWallTweets(String userId, List<Tweet> tweets)
+    {
+        return getUserTweets(userId, tweets).stream()
+                .filter(userTweet -> userTweet.getOwnerId().equals(userTweet.getAuthorId()))
+                .collect(Collectors.toList());
+    }
+
+    Mono<ServerResponse> getTweetsForTimeLine(ServerRequest serverRequest)
+    {
+        String userId = serverRequest.pathVariable("id");
+
+        Mono<ServerResponse> notFound = ServerResponse
+                .notFound()
+                .header(Header.ERROR.message(), RestMessages.TWEETS_NOT_FOUND.message())
+                .build();
+
+        return TweetRepository.getRepository().findAll().collectList()
+                .flatMap(tweets ->
+                        {
+                            if (tweets.isEmpty())
+                            {
+                                return notFound;
+                            }
+
+                            return ServerResponse.ok()
+                                    .contentType(APPLICATION_JSON)
+                                    .body(fromObject(reverse(getTimeLineTweets(userId, tweets))));
+                        }
+                );
+    }
+
+
+    private List<Tweet> getTimeLineTweets(String userId, List<Tweet> tweets)
+    {
+        return getUserTweets(userId, tweets).stream()
+                .filter(userTweet -> !userTweet.getOwnerId().equals(userTweet.getAuthorId()))
+                .collect(Collectors.toList());
+    }
+
+    private List<Tweet> getUserTweets(String userId, List<Tweet> tweets)
+    {
+        return tweets.stream()
+                .filter(tweet -> tweet.getOwnerId().equals(userId))
+                .collect(Collectors.toList());
     }
 }

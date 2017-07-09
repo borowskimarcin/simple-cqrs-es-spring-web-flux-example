@@ -4,7 +4,7 @@ import com.marbor.social.app.domain.Tweet;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class TweetRepository implements Repository<Tweet>
 {
     private static final TweetRepository TWEET_REPOSITORY = new TweetRepository();
-    private final HashMap<String, Tweet> localRepo = new HashMap<>(128);
+    private final LinkedHashMap<String, Tweet> localRepo = new LinkedHashMap<>(128);
 
     @Override
     public void save(Tweet entity)

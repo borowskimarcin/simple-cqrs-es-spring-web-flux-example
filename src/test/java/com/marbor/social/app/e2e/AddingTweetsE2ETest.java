@@ -38,7 +38,7 @@ public class AddingTweetsE2ETest extends E2eTest
         String message = "Hello everybody";
 
         // when & then
-        helper.createTweet(user2Id, createTweetPostBody(message))
+        helper.createTweet(user2Id, message)
                 .then()
                 .statusCode(200)
                 .body("message", is(message))
@@ -73,17 +73,11 @@ public class AddingTweetsE2ETest extends E2eTest
     {
 
         String message = "Hello World Tweet";
-        String postBody = createTweetPostBody(message);
         String wrongId = UUID.randomUUID().toString();
 
-        helper.createTweet(wrongId, postBody)
+        helper.createTweet(wrongId, message)
                 .then()
                 .statusCode(400)
                 .header(Header.ERROR.message(), RestMessages.USER_ID_NOT_EXISTS.message());
-    }
-
-    private String createTweetPostBody(String message)
-    {
-        return "{\"message\": " + "\"" + message + "\"" + "}";
     }
 }

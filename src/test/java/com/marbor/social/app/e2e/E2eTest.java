@@ -1,6 +1,7 @@
 package com.marbor.social.app.e2e;
 
 import com.marbor.social.app.SocialAppApplication;
+import com.marbor.social.app.e2e.helpers.Helper;
 import io.restassured.RestAssured;
 import org.junit.BeforeClass;
 

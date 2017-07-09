@@ -1,5 +1,7 @@
 package com.marbor.social.app.e2e;
 
+import com.marbor.social.app.routes.Header;
+import com.marbor.social.app.routes.RestMessages;
 import com.marbor.social.app.routes.Routes;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
@@ -83,22 +85,23 @@ public class GettingTweetsE2ETest extends E2eTest
         Assert.assertEquals(message, resultMessageFollower.get(0));
 
         // Author should not have any tweet on his timeline
-        String responseAuthorTimeLine = given()
+        given()
                 .contentType(ContentType.JSON)
                 .pathParam("id", user2Id)
                 .when()
                 .get(Routes.GET_TWEETS_TIMELINE.pattern())
                 .then()
+                .statusCode(404)
+                .header(Header.ERROR.message(), RestMessages.TWEETS_NOT_FOUND.message());
+
+        //Follower should not have post on his wall
+        given()
                 .contentType(ContentType.JSON)
-                .statusCode(200)
-                .extract()
-                .response()
-                .asString();
-
-        List<Map<String,?>> entriesAuthorTimeLine = JsonPath.from(responseAuthorTimeLine)
-                .get("");
-
-        Assert.assertEquals(0, entriesAuthorTimeLine.size());
-
+                .pathParam("id", user1Id)
+                .when()
+                .get(Routes.GET_TWEETS_WALL.pattern())
+                .then()
+                .statusCode(404)
+                .header(Header.ERROR.message(), RestMessages.TWEETS_NOT_FOUND.message());
     }
 }

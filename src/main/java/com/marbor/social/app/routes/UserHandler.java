@@ -3,6 +3,7 @@ package com.marbor.social.app.routes;
 import com.marbor.social.app.commands.CreateUserCommand;
 import com.marbor.social.app.commands.SubscribeCommand;
 import com.marbor.social.app.domain.User;
+import com.marbor.social.app.query.UserQueryService;
 import com.marbor.social.app.repositories.UserRepository;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.web.reactive.function.BodyExtractors;
@@ -21,6 +22,7 @@ import static org.springframework.web.reactive.function.BodyInserters.fromObject
 class UserHandler
 {
     private final CommandGateway commandGateway;
+    private final UserQueryService userQueryService = new UserQueryService();
 
     UserHandler(CommandGateway commandGateway)
     {
@@ -54,15 +56,12 @@ class UserHandler
 
     Mono<ServerResponse> getUser(ServerRequest request)
     {
-        String id = request.pathVariable("id");
-
         Mono<ServerResponse> notFound = ServerResponse
                 .notFound()
                 .header(Header.ERROR.message(), RestMessages.USER_NOT_FOUND.message())
                 .build();
 
-        return UserRepository.getRepository()
-                .findById(id)
+        return userQueryService.findUser(request.pathVariable("id"))
                 .flatMap(u ->
                         ServerResponse.ok()
                                 .contentType(APPLICATION_JSON)
@@ -77,9 +76,7 @@ class UserHandler
                 .header(Header.ERROR.message(), USERS_NOT_FOUND.message())
                 .build();
 
-        return UserRepository.getRepository()
-                .findAll()
-                .collectList()
+        return userQueryService.findAllUsers()
                 .flatMap(users ->
                         ServerResponse.ok()
                                 .contentType(APPLICATION_JSON)
@@ -107,11 +104,10 @@ class UserHandler
                 .header(Header.ERROR.message(), SUBSCRIPTION_NOT_FOUND.message())
                 .build();
 
-        return UserRepository.getRepository()
-                .findById(request.pathVariable("id"))
-                .flatMap(user -> ServerResponse.ok()
+        return userQueryService.findSubscriptions(request.pathVariable("id"))
+                .flatMap(subscriptions -> ServerResponse.ok()
                         .contentType(APPLICATION_JSON)
-                        .body(fromObject(user.getFollowedIds())))
+                        .body(fromObject(subscriptions)))
                 .switchIfEmpty(notFound);
     }
 

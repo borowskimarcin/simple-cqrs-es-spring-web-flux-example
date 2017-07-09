@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 /**
  * Created by marcin on 09.07.17.
  */
-public class QueryService
+public class TweetsQueryService
 {
     public Mono<List<Tweet>> findAllTweets()
     {

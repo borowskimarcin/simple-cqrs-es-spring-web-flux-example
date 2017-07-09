@@ -2,7 +2,7 @@ package com.marbor.social.app.routes;
 
 import com.marbor.social.app.commands.CreateTweetCommand;
 import com.marbor.social.app.domain.Tweet;
-import com.marbor.social.app.query.QueryService;
+import com.marbor.social.app.query.TweetsQueryService;
 import com.marbor.social.app.repositories.UserRepository;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.web.reactive.function.BodyExtractors;
@@ -21,7 +21,7 @@ import static org.springframework.web.reactive.function.BodyInserters.fromObject
  */
 public class TweetHandler
 {
-    private final QueryService queryService = new QueryService();
+    private final TweetsQueryService tweetsQueryService = new TweetsQueryService();
     private final CommandGateway commandGateway;
 
     public TweetHandler(CommandGateway commandGateway)
@@ -72,7 +72,7 @@ public class TweetHandler
                 .header(Header.ERROR.message(), RestMessages.TWEETS_NOT_FOUND.message())
                 .build();
 
-        return queryService.findAllTweets()
+        return tweetsQueryService.findAllTweets()
                 .flatMap(tweets ->
                 {
                     if (tweets.isEmpty())
@@ -95,7 +95,7 @@ public class TweetHandler
                 .header(Header.ERROR.message(), RestMessages.TWEETS_NOT_FOUND.message())
                 .build();
 
-        return queryService.findTweetsForWall(userId)
+        return tweetsQueryService.findTweetsForWall(userId)
                 .flatMap(tweets ->
                         {
                             if (tweets.isEmpty())
@@ -119,7 +119,7 @@ public class TweetHandler
                 .header(Header.ERROR.message(), RestMessages.TWEETS_NOT_FOUND.message())
                 .build();
 
-        return queryService.findTweetsForTimeLine(userId)
+        return tweetsQueryService.findTweetsForTimeLine(userId)
                 .flatMap(tweets ->
                         {
                             if (tweets.isEmpty())

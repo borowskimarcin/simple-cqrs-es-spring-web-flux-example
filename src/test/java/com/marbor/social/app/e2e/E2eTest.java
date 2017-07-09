@@ -3,6 +3,7 @@ package com.marbor.social.app.e2e;
 import com.marbor.social.app.SocialAppApplication;
 import com.marbor.social.app.e2e.helpers.Helper;
 import io.restassured.RestAssured;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 import java.io.IOException;
@@ -35,5 +36,10 @@ public abstract class E2eTest
         ServerSocket s = new ServerSocket(0);
         s.close();
         return s.getLocalPort();
+    }
+    @AfterClass
+    public static void cleanUp()
+    {
+
     }
 }

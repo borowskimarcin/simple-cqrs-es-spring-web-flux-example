@@ -3,7 +3,10 @@ package com.marbor.social.app.e2e;
 import com.marbor.social.app.routes.Routes;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
+import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static java.util.Collections.singletonList;
@@ -79,18 +82,20 @@ public class SubscriptionsE2EIT extends E2eIT
                 .statusCode(200);
 
         // when & then
-        //TODO change this
-        String packedFollowedId = "[\"" + followedId + "\"]";
 
-        given()
+        String response = given()
                 .contentType(ContentType.JSON)
                 .pathParam("id", userId)
-            .when()
+                .when()
                 .get(Routes.GET_SUBSCRIPTIONS.pattern())
-            .then()
+                .then()
                 .contentType(ContentType.JSON)
                 .statusCode(200)
-                .body(is(packedFollowedId));
+                .extract()
+                .response()
+                .asString();
+        List<String> resultFollowedIds = JsonPath.from(response).get("");
+        Assert.assertEquals(followedId, resultFollowedIds.get(0));
 
     }
 

@@ -3,7 +3,6 @@ package com.marbor.social.app.e2e;
 import com.marbor.social.app.routes.Routes;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
-import io.restassured.response.Response;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
@@ -20,12 +19,12 @@ public class SubscriptionsE2ETest extends E2eTest
     public void subscribeToUser()
     {
         String userId = JsonPath
-                .from(createUserWithName("user6")
+                .from(helper.createUserWithName("user6")
                         .asString())
                 .get("id");
 
         String followedId = JsonPath
-                .from(createUserWithName("user7")
+                .from(helper.createUserWithName("user7")
                         .asString())
                 .get("id");
         // given - add follower to given user
@@ -33,13 +32,13 @@ public class SubscriptionsE2ETest extends E2eTest
                 .contentType(ContentType.JSON)
                 .pathParam("id", userId)
                 .pathParam("followedId", followedId)
-                .when()
+            .when()
                 .patch(Routes.SUBSCRIBE.pattern())
                 .then()
                 .statusCode(200);
 
         // then
-        getUser(userId)
+        helper.getUser(userId)
                 .then()
                 .contentType(ContentType.JSON)
                 .statusCode(200)
@@ -47,7 +46,7 @@ public class SubscriptionsE2ETest extends E2eTest
                 .body("followedIds", is(singletonList(followedId)))
                 .body("id", is(userId));
 
-        getUser(followedId)
+        helper.getUser(followedId)
                 .then()
                 .contentType(ContentType.JSON)
                 .statusCode(200)
@@ -61,12 +60,12 @@ public class SubscriptionsE2ETest extends E2eTest
     public void subscribeAndGetFollowedIds()
     {
         String userId = JsonPath
-                .from(createUserWithName("user3")
+                .from(helper.createUserWithName("user3")
                         .asString())
                 .get("id");
 
         String followedId = JsonPath
-                .from(createUserWithName("user4")
+                .from(helper.createUserWithName("user4")
                         .asString())
                 .get("id");
         // given - add follower to given user
@@ -95,22 +94,4 @@ public class SubscriptionsE2ETest extends E2eTest
 
     }
 
-    private Response getUser(String userId)
-    {
-        return given()
-                .contentType(ContentType.JSON)
-                .pathParam("id", userId)
-                .when()
-                .get(Routes.GET_USER.pattern());
-    }
-
-    private Response createUserWithName(String name)
-    {
-        String postBody = "{\"name\": \"" + name + "\"}";
-
-        return given()
-                .contentType(ContentType.JSON)
-                .body(postBody)
-                .post(Routes.CREATE_USER.pattern());
-    }
 }

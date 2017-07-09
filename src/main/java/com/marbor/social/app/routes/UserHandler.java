@@ -58,7 +58,7 @@ class UserHandler
 
         Mono<ServerResponse> notFound = ServerResponse
                 .notFound()
-                .header("Message", RestMessages.USER_NOT_FOUND.message())
+                .header(Header.ERROR.message(), RestMessages.USER_NOT_FOUND.message())
                 .build();
 
         return UserRepository.getRepository()
@@ -74,7 +74,7 @@ class UserHandler
     {
         Mono<ServerResponse> notFound = ServerResponse
                 .notFound()
-                .header("Message", USERS_NOT_FOUND.message())
+                .header(Header.ERROR.message(), USERS_NOT_FOUND.message())
                 .build();
 
         return UserRepository.getRepository()
@@ -104,7 +104,7 @@ class UserHandler
     {
         Mono<ServerResponse> notFound = ServerResponse
                 .notFound()
-                .header("Message", SUBSCRIPTION_NOT_FOUND.message())
+                .header(Header.ERROR.message(), SUBSCRIPTION_NOT_FOUND.message())
                 .build();
 
         return UserRepository.getRepository()

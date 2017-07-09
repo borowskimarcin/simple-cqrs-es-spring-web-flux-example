@@ -31,9 +31,11 @@ public class TweetHandler
     Mono<ServerResponse> createTweet(ServerRequest request)
     {
         Mono<ServerResponse> badRequestMessageTooLong = ServerResponse.badRequest()
-                .body(fromObject(TWEET_MESSAGE_TOO_LONG.message()));
+                .header(Header.ERROR.message(),TWEET_MESSAGE_TOO_LONG.message())
+                .build();
         Mono<ServerResponse> badRequestAuthorDoesNotExists = ServerResponse.badRequest()
-                .body(fromObject(USER_ID_NOT_EXISTS.message()));
+                .header(Header.ERROR.message(), USER_ID_NOT_EXISTS.message())
+                .build();
 
         String authorId = request.pathVariable("id");
 
@@ -67,7 +69,7 @@ public class TweetHandler
     {
         Mono<ServerResponse> notFound = ServerResponse
                 .notFound()
-                .header("Message", RestMessages.TWEETS_NOT_FOUND.message())
+                .header(Header.ERROR.message(), RestMessages.TWEETS_NOT_FOUND.message())
                 .build();
 
         return TweetRepository.getRepository().findAll().collectList()

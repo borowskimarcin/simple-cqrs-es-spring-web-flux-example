@@ -10,8 +10,10 @@ import java.net.ServerSocket;
 /**
  * Created by marcin on 08.07.17.
  */
-abstract class E2eTest
+public abstract class E2eTest
 {
+    protected final Helper helper = new Helper();
+
     @BeforeClass
     public static void setUp() throws IOException
     {

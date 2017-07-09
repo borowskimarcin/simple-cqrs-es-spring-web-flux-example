@@ -57,15 +57,14 @@ public class AddingTweetsE2ETest extends E2eTest
 
         List<Map<String,?>> entries = JsonPath.from(response)
                 .get("");
-        List<String> names =JsonPath.from(response).get("ownerId");
+        List<String> ownerIds = JsonPath.from(response).get("ownerId");
         List<String> authorIds =JsonPath.from(response).get("authorId");
 
         Assert.assertThat(entries.size(), is(2));
-        Assert.assertThat(names.get(0), is(user2Id));
-        Assert.assertThat(names.get(1), is(user1Id));
-        Assert.assertThat(authorIds.get(0), is(user2Id));
-        Assert.assertThat(authorIds.get(1), is(user2Id));
-
+        Assert.assertTrue(ownerIds.contains(user2Id));
+        Assert.assertTrue(ownerIds.contains(user1Id));
+        Assert.assertEquals(authorIds.size(), 2);
+        Assert.assertTrue(authorIds.contains(user2Id));
     }
 
     @Test

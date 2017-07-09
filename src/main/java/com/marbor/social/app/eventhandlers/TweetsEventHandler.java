@@ -8,6 +8,11 @@ import com.marbor.social.app.repositories.UserRepository;
 import org.axonframework.eventhandling.EventHandler;
 import reactor.core.publisher.Mono;
 
+import java.util.Arrays;
+import java.util.Collections;
+
+import static java.util.Collections.singletonList;
+
 
 public class TweetsEventHandler
 {
@@ -37,18 +42,18 @@ public class TweetsEventHandler
     {
         author.getFollowersIds()
                 .forEach(followerId -> tweetRepository.save(
-                        new Tweet(event.getId() + followerId,
+                        singletonList(new Tweet(event.getId() + followerId,
                                 event.getMessage(),
                                 followerId,
-                                event.getAuthorId())));
+                                event.getAuthorId()))));
     }
 
     private void saveTweetForAuthor(TweetCreatedEvent event)
     {
-        tweetRepository.save(new Tweet(event.getId() + event.getAuthorId(),
+        tweetRepository.save(singletonList(new Tweet(event.getId() + event.getAuthorId(),
                 event.getMessage(),
                 event.getAuthorId(),
-                event.getAuthorId()));
+                event.getAuthorId())));
     }
 
 }

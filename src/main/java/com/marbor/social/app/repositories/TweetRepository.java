@@ -4,36 +4,36 @@ import com.marbor.social.app.domain.Tweet;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.Collections.emptyList;
 
 /**
  * Created by marcin on 08.07.17.
  */
-public class TweetRepository implements Repository<Tweet>
-{
+public class TweetRepository implements Repository<List<Tweet>> {
     private static final TweetRepository TWEET_REPOSITORY = new TweetRepository();
-    private final LinkedHashMap<String, Tweet> localRepo = new LinkedHashMap<>(128);
+    private final HashMap<String, List<Tweet>> localRepo = new HashMap<>(128);
 
     @Override
-    public void save(Tweet entity)
-    {
-        localRepo.put(entity.getId(), entity);
+    public void save(List<Tweet> entity) {
+        entity = new ArrayList<>(entity);
+        if (!entity.isEmpty()) {
+            String ownerId = entity.get(0).getOwnerId();
+            List<Tweet> beforeTweets = Optional.ofNullable(localRepo.get(ownerId))
+                    .orElse(Collections.emptyList());
+
+            localRepo.put(ownerId, Stream.concat(beforeTweets.stream(), entity.stream())
+                    .collect(Collectors.toList()));
+        }
     }
 
     @Override
-    public void delete(Tweet entity)
-    {
-        localRepo.remove(entity.getId());
-    }
-
-    @Override
-    public Flux<Tweet> findAll()
-    {
-        List<Tweet> tweets = localRepo.values().stream().collect(Collectors.toList());
-        if (tweets.isEmpty())
-        {
+    public Flux<List<Tweet>> findAll() {
+        List<List<Tweet>> tweets = new ArrayList<>(localRepo.values());
+        if (tweets.isEmpty()) {
             return Flux.empty();
         }
 
@@ -41,13 +41,11 @@ public class TweetRepository implements Repository<Tweet>
     }
 
     @Override
-    public Mono<Tweet> findById(String id)
-    {
+    public Mono<List<Tweet>> findById(String id) {
         return Mono.justOrEmpty(localRepo.get(id));
     }
 
-    public static TweetRepository getRepository()
-    {
+    public static TweetRepository getRepository() {
         return TWEET_REPOSITORY;
     }
 }

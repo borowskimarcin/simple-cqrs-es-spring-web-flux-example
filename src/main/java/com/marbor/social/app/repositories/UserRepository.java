@@ -4,9 +4,9 @@ import com.marbor.social.app.domain.User;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by marcin on 08.07.17.
@@ -29,15 +29,9 @@ public class UserRepository implements Repository<User>
     }
 
     @Override
-    public void delete(User entity)
-    {
-        localRepo.remove(entity.getId());
-    }
-
-    @Override
     public Flux<User> findAll()
     {
-        List<User> users = localRepo.values().stream().collect(Collectors.toList());
+        List<User> users = new ArrayList<>(localRepo.values());
         if (users.isEmpty())
         {
             return Flux.empty();

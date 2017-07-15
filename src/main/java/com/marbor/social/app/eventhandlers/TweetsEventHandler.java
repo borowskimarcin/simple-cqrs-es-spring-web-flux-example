@@ -16,10 +16,8 @@ import static java.util.Collections.singletonList;
 
 public class TweetsEventHandler
 {
-    //visibility for tests
-    TweetRepository tweetRepository = TweetRepository.getRepository();
-    //visibility for tests
-    UserRepository userRepository = UserRepository.getRepository();
+    private final TweetRepository tweetRepository = TweetRepository.getRepository();
+    private final UserRepository userRepository = UserRepository.getRepository();
 
     @EventHandler
     public void handle(TweetCreatedEvent event)
